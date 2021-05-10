@@ -19,8 +19,10 @@ export function Welcome(){
     navigation.navigate('Login')
   }
 
+  function handleStart2(){
+    navigation.navigate('Cadastro')
+  }
   
-
   return(
     
     <SafeAreaView style={style.conteiner}>
@@ -45,14 +47,14 @@ export function Welcome(){
         <Button
         title={'Entrar'}
         onPress={handleStart}
-
-        
-        
         />
 
     
         <Button
-        title={'Cadastar'}/>
+        title={'Cadastar'}
+        onPress={handleStart2}
+        
+        />
       </View>
 
     

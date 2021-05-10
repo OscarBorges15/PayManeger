@@ -2,14 +2,12 @@ import React, {useState} from 'react';
 import {SafeAreaView,
   View, 
   Text, 
-  Image, 
-  TouchableOpacity, 
+  Image,  
   StyleSheet,
   Dimensions,
   TextInput, 
+  ScrollView,
   KeyboardAvoidingView,
-  Platform,
-  ScrollView
 } from 'react-native';
 
 import {useNavigation} from '@react-navigation/core';
@@ -26,11 +24,11 @@ export function Login(){
 
   return(
     <SafeAreaView style={style.conteiner}>
+      <View style={style.inner}>
       <ScrollView>
 
-      
 
-      <View style={style.inner}>
+      
         <View style={style.conteinerImage} >
           <Image 
             source={icone} 
@@ -51,16 +49,17 @@ export function Login(){
             placeholder="Digite sua senha"/>
           </View>
 
-        </View>
+       
 
           <View  style={style.button}>
             <Button
-            title={'Entar'}
+            title={'Login'}
             onPress={handleStart}/>
           </View>
 
 
-      </ScrollView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   )
  
