@@ -10,7 +10,7 @@ export function Cadastro(){
   const navigation = useNavigation(); 
 
   function handleStart(){
-    navigation.navigate('Welcome')
+    navigation.navigate('CadastroConfirmation')
   }
 
   return (

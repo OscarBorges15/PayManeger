@@ -1,4 +1,4 @@
-import React, { useState }  from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, KeyboardAvoidingView, StyleSheet, Text,   } from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 
@@ -11,6 +11,19 @@ import {Load} from '../components/Load'
 export function Menu(){
   const[loading, setLoadinig] = useState(true);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setLoadinig(false);
+    }, 1000 );
+  }, []);
+
+  if(loading){
+    return(
+      <View>
+      <Load/>
+      </View>
+    )
+  }
 
 
   return (
