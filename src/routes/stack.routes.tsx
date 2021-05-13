@@ -5,7 +5,8 @@ import {Welcome} from '../pages/Welcome'
 import {Login} from '../pages/Login'
 import {Menu} from '../pages/Menu'
 import {Cadastro} from '../pages/Cadastro'
-
+import {CriarRecibo} from '../pages/CriarRecibo'
+import {EnviarRecibo} from '../pages/EnviarRecibo'
 
 const stackRoutes = createStackNavigator();
 
@@ -34,6 +35,15 @@ const AppRoutes : React.FC = () => (
     component={Menu}
   />
 
+  <stackRoutes.Screen
+    name="CriarRecibo"
+    component={CriarRecibo}
+  />
+
+  <stackRoutes.Screen
+    name="EnviarRecibo"
+    component={EnviarRecibo}
+  />
 
 </stackRoutes.Navigator>
 )
