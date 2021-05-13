@@ -1,16 +1,28 @@
-import React from 'react';
-import { View, TextInput, StyleSheet, Image, Text,ScrollView, SafeAreaView, Dimensions,} from 'react-native';
+import React, {useState} from 'react';
+import { View, TextInput, StyleSheet, Image, Text,ScrollView, SafeAreaView, Dimensions, Alert} from 'react-native';
 
 import icone from '../assets/icone.png' ;
 
 import {useNavigation} from '@react-navigation/core';
 import {Button} from '../components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function Cadastro(){
   const navigation = useNavigation(); 
+  const [name, setName] = useState<string>();
+  const [nameEmpresa, setNameEmpresa] = useState<string>();
 
-  function handleStart(){
-    navigation.navigate('CadastroConfirmation')
+  function handleInputChange(value : string){
+    setName(value);
+    setNameEmpresa(value);
+  }
+
+  async function handleStart(){
+    if(!name)                                                 // funcao que verifica se o usuario preencheu o nome
+        return Alert.alert('Digite todos os dados 😥');      // caso nao tenha nada digitado 
+      
+       await AsyncStorage.setItem('@ManagerPay:user', name);  // chave para salvar no dispositivo o nome do usuario
+    navigation.navigate('CadastroConfirmation')              // navegacao para a proxima page
   }
 
   return (
@@ -30,6 +42,7 @@ export function Cadastro(){
         <TextInput
           style={styles.input}
           placeholder = " Nome Completo*"
+          onChangeText={handleInputChange}
         />
 
 

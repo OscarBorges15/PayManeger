@@ -41,8 +41,6 @@ const AppRoutes : React.FC = () => (
   />
 
 
-
-
 </stackRoutes.Navigator>
 )
  

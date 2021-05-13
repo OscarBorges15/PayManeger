@@ -14,7 +14,7 @@ export function Menu(){
   useEffect(() => {
     setTimeout(() => {
       setLoadinig(false);
-    }, 1000 );
+    }, 1200 );
   }, []);
 
   if(loading){
