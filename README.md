@@ -1,4 +1,4 @@
-#  PAY MANAGER
+#  MANAGER PAY 
 
   Esse aplicativo tem como principal objetivo ajudar trabalhadores a gerir com maior facilidade suas vendas, possuindo uma noção macro e micro das mesmas em tempo real e a qualquer momento que for necessário.
    

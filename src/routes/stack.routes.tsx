@@ -7,6 +7,8 @@ import {Menu} from '../pages/Menu'
 import {Cadastro} from '../pages/Cadastro'
 import {CriarRecibo} from '../pages/CriarRecibo'
 import {EnviarRecibo} from '../pages/EnviarRecibo'
+import {CadastroConfirmation} from '../pages/CadastroConfirmation'
+
 
 const stackRoutes = createStackNavigator();
 
@@ -23,6 +25,11 @@ const AppRoutes : React.FC = () => (
 <stackRoutes.Screen
     name="Cadastro"
     component={Cadastro}
+  />
+
+  <stackRoutes.Screen
+    name="CadastroConfirmation"
+    component={CadastroConfirmation}
   />
 
   <stackRoutes.Screen

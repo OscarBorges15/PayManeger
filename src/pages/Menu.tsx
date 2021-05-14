@@ -1,5 +1,5 @@
-import React, { useState }  from 'react';
 import { View, StyleSheet, Text, TextInput, Modal } from 'react-native';
+import React, { useState, useEffect } from 'react';
 import {useNavigation} from '@react-navigation/core';
 import {Button} from '../components/Button';
 import {Header} from '../components/Header';
@@ -11,6 +11,20 @@ export function Menu(){
   const navigation = useNavigation(); 
   function handleStart(){
     navigation.navigate('EnviarRecibo')
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoadinig(false);
+    }, 1200 );
+  }, []);
+
+  if(loading){
+    return(
+      <View>
+    
+      </View>
+    )
   }
 
   return (

@@ -85,7 +85,7 @@ const style = StyleSheet.create({
 
   },
   tittle :{
-    fontSize: 28,
+    fontSize: 25,
     fontWeight: 'bold',
     color: 'white',
     lineHeight:45,

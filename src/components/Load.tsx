@@ -5,6 +5,7 @@ import { View, KeyboardAvoidingView, StyleSheet, Text,   } from 'react-native';
 import LoadAnimation from '../assets/load.json'
 
 export function Load(){
+
   return(
     <View style={styles.container}>
       <LottieView 
@@ -23,12 +24,11 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
     justifyContent:'center',
-    alignItems:"center",
-
-
+    alignItems:'center',
 
   },
   animationn:{
+   paddingVertical:150,
     backgroundColor:"transparent",
     width:200,
     height:200,
