@@ -27,11 +27,11 @@ export function Header(){
     <View style={styles.container}>
      
       <View>
-        <Text style={styles.comprimento}>Olá</Text>
+        <Text style={styles.comprimento}>Olá,</Text>
         <Text style={styles.username}> 
         {userName}
         </Text>
-        </View>
+      </View>
       
       <Image source={perfilImg} style={styles.image}/>
 

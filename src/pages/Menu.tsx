@@ -1,17 +1,28 @@
-import { View, StyleSheet, Text, TextInput, Modal } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { 
+  View, 
+  StyleSheet, 
+  Text, 
+  TextInput, 
+  Modal, 
+  Alert 
+} from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {Button} from '../components/Button';
 import {Header} from '../components/Header';
-
+import {Recibo} from '../components/Recibo';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export function Menu(){
+
   const[loading, setLoadinig] = useState(true);
+
+  const [produto, setProduto] = useState<string>();
+  const [valor, setValor] = useState<string>();
+
   const [isVisible, setVisible] = useState(false);
+  
   const navigation = useNavigation(); 
-  function handleStart(){
-    navigation.navigate('EnviarRecibo')
-  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -27,6 +38,26 @@ export function Menu(){
     )
   }
 
+  function handleInputProduto(value: string){
+    setProduto(value);
+  }
+  function handleInputValor(value: string){
+    setValor(value);
+  }
+
+  async function handleStart(){
+    if(!produto)
+      return Alert.alert('Preencha todos os campos');
+    await AsyncStorage.setItem('@managerpay:produto', produto);
+    
+    if(!valor)
+      return Alert.alert('Preencha todos os campos');
+    await AsyncStorage.setItem('@managerpay:valor', valor);
+    
+    navigation.navigate('Menu');
+    setVisible(!isVisible)
+  }
+
   return (
     <View style={style.container}>
       <View style={style.header}>
@@ -35,7 +66,7 @@ export function Menu(){
           Bem vindo a suas vendas !!!
         </Text>
       </View>
-
+      <Recibo/>
       <View  style={style.button}>
         <Button
         title={'+Novo'}
@@ -52,11 +83,15 @@ export function Menu(){
                 <TextInput
                   style={style.input}
                   placeholder="Digite os produtos"
+                  onChangeText={handleInputProduto}
                 />
                 <Text style={style.textInput}>Valor</Text>
                 <TextInput 
                   style= {style.input}
-                  placeholder="Digite o valor total"/>
+                  placeholder="Digite o valor total"
+                  onChangeText={handleInputValor}
+                  />
+    
               </View>
 
               <View  style={style.buttonModal}>
@@ -103,7 +138,7 @@ const style = StyleSheet.create({
 
   },
   button:{
-    paddingVertical:20,
+    paddingVertical:380,
     alignItems:'center'
   },
   buttonModal:{

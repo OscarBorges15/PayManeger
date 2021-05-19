@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, SafeAreaView, Image, Dimensions } from 'react-n
 import {useNavigation} from '@react-navigation/core';
 import {Button, Button2} from '../components/Button';
 import qrcodeImg from '../assets/qrcode.png';
-
+import {Recibo} from '../components/Recibo';
 export function EnviarRecibo(){
     const navigation = useNavigation(); 
     function handleStart(){
@@ -15,8 +15,9 @@ export function EnviarRecibo(){
     return (
         <SafeAreaView style={style.container}>
             <View style={style.containertittle}>
-                <Text style={style.text}>Itens: refeição completa, suco de laranja </Text>
-                <Text style={style.text}>Valor: R$ 24,00 </Text>
+            
+                <Recibo/>
+    
             </View>
             <View style={style.conteinerImage} >
                 <Image 
