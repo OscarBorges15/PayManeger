@@ -9,6 +9,7 @@ import {CadastroConfirmation} from '../pages/CadastroConfirmation'
 import {UserConfirmation2} from '../pages/UserConfirmation2'
 import {UserConfirmation} from '../pages/UserConfirmation'
 
+import {EnviarRecibo} from '../pages/EnviarRecibo'
 
 const stackRoutes = createStackNavigator();
 
@@ -52,6 +53,10 @@ const AppRoutes : React.FC = () => (
     component={Menu}
   />
 
+  <stackRoutes.Screen
+    name="EnviarRecibo"
+    component={EnviarRecibo}
+  />
 
 </stackRoutes.Navigator>
 )

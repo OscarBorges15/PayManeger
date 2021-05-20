@@ -32,13 +32,13 @@ export function Welcome(){
 
         </View>
 
- <View style={style.containertittle}>
-    <Text style={style.tittle}>
-        Sua plataforma  {'\n'}
-        de gestao {'\n'}
-        para vendas 
-        </Text>
-</View>
+    <View style={style.containertittle}>
+        <Text style={style.tittle}>
+            Sua plataforma  {'\n'}
+            de gestao {'\n'}
+            para vendas 
+            </Text>
+    </View>
 
       <View  style={style.button}>
         <Button
@@ -56,7 +56,7 @@ export function Welcome(){
 const style = StyleSheet.create({
   conteiner : {
     flex: 1,
-    backgroundColor:'#F1B656',
+    backgroundColor:'#F1B656'
     
   },
   image:{
