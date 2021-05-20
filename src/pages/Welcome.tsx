@@ -16,12 +16,9 @@ export function Welcome(){
   const navigation = useNavigation(); 
 
   function handleStart(){
-    navigation.navigate('Login')
+    navigation.navigate('UserConfirmation')
   }
 
-  function handleStart2(){
-    navigation.navigate('Cadastro')
-  }
   
   return(
     
@@ -49,12 +46,6 @@ export function Welcome(){
         onPress={handleStart}
         />
 
-    
-        <Button
-        title={'Cadastar'}
-        onPress={handleStart2}
-        
-        />
       </View>
 
     

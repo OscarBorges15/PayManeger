@@ -6,6 +6,9 @@ import icone from '../assets/icone.png' ;
 import {Button} from '../components/Button';
 import {Header} from '../components/Header'
 import {Load} from '../components/Load'
+import {Conprovantes} from '../components/Conprovantes'
+
+import {saveRecibo, ReciboProps} from '../libs/storage'
 
 
 export function Menu(){
@@ -33,6 +36,12 @@ export function Menu(){
         <Text style={styles.title}>
           Bem vindo a suas vendas !!!
         </Text>
+
+
+      <Button
+      title={'Cadastrar Recibo'}
+      />
+
       </View>
 
 
