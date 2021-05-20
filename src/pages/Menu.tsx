@@ -72,17 +72,15 @@ export function Menu(){
         </Text>
 
 
-      <Button
-      title={'Cadastrar Recibo'}
-      />
-
-      </View>
-      <Recibo/>
       <View  style={style.button}>
         <Button
         title={'+Novo'}
         onPress={()=>{setVisible(true)}}/>
       </View>
+
+      </View>
+      <Recibo/>
+      
 
       <View style={style.centeredView}> 
         <Modal visible={isVisible} 

@@ -10,11 +10,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 export function Cadastro(){
   const navigation = useNavigation(); 
   const [name, setName] = useState<string>();
-  const [nameEmpresa, setNameEmpresa] = useState<string>();
+  
 
   function handleInputChange(value : string){
     setName(value);
-    setNameEmpresa(value);
+    
   }
 
   async function handleStart(){
