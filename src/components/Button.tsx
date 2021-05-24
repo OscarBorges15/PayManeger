@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
     borderRadius:16,
     height:50,
-    marginVertical:5
+    marginBottom: 150,
     
   },
   conteinerLaranja:{
