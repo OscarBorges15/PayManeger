@@ -67,9 +67,9 @@ export function UploadImage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
-    marginHorizontal:50,
+    marginHorizontal:30,
     width:'100%',
-   marginLeft:140,
+    marginLeft:140,
     alignItems:"center",
   },
   button: {

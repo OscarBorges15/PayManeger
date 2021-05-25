@@ -1,35 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  StyleSheet, 
-  Text, 
-  TextInput, 
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Platform,
+  SafeAreaView,
+  FlatList, 
   Modal, 
-  Alert 
+  Alert,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {Button} from '../components/Button';
-import {Header} from '../components/Header'
-import {Load} from '../components/Load'
-import {UploadImage} from '../components/uploadImage'
+import {BtnAdicionar} from '../components/BtnAdicionar';
+import {SkillCard} from '../components/SkillCard';
+import {Header} from '../components/Header';
+
+import {Load} from '../components/Load';
 
 
-import {Conprovantes} from '../components/Conprovantes'
-import {saveRecibo, ReciboProps} from '../libs/storage'
 
-import {Recibo} from '../components/Recibo';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export function Menu(){
+interface SkillData {
+  id: string;
+  name: string;
+}
+
+export function Menu() {
+  const navigation = useNavigation(); 
+  const [name, setName] = useState<string>();
+
+  const [newSkill, setNewSkill] = useState('');
+  const [listSkills, setListSkills] = useState<SkillData[]>([]);
+  const [greetings, setGreetings] = useState('');
 
   const[loading, setLoadinig] = useState(true);
-
-  const [produto, setProduto] = useState<string>();
-  const [valor, setValor] = useState<string>();
-
   const [isVisible, setVisible] = useState(false);
-  
-  const navigation = useNavigation(); 
 
 
   useEffect(() => {
@@ -37,7 +48,7 @@ export function Menu(){
       setLoadinig(false);
     }, 1200 );
 
-  }, [ produto ]);
+  }, [ ]);
 
   if(loading){
     return(
@@ -46,101 +57,136 @@ export function Menu(){
       </View>
     )
   }
-
-  function handleInputProduto(value: string){
-    setProduto(value);
-  }
-  function handleInputValor(value: string){
-    setValor(value);
-  }
-
   async function handleStart(){
-    if(!produto)
-      return Alert.alert('Preencha todos os campos');
-    await AsyncStorage.setItem('@managerpay:produto', produto);
-    
-    if(!valor)
-      return Alert.alert('Preencha todos os campos');
-    await AsyncStorage.setItem('@managerpay:valor', valor);
-    
     navigation.navigate('EnviarRecibo');
-    setVisible(!isVisible)
+
+  }
+
+  function handleInputChange(value : string){
+    setName(value);
+    
+  }
+
+
+  function handleRemoveSkill(id: string) {
+    Alert.alert('Deletar Skill', 'Deseja deletar a skill selecionada?', [
+      {
+        text: 'Não',
+      },
+      {
+        text: 'Sim',
+        onPress: () => {
+          return setListSkills(oldState => oldState.filter(skill => skill.id !== id))
+        }
+      },
+    ])
+  }
+
+  function handleAddNewSkills() {
+
+    if(newSkill === ''){
+      Alert.alert('Atenção ⚠', 'Você não nomeou nenhum produto')
+      return;
+    }
+
+    const data = {
+      id: String(new Date().getTime()),
+      name: newSkill
+    }
+
+    setListSkills(oldState => [...oldState, data]);
+
+    setNewSkill('');
   }
 
   return (
-    <View style={style.container}>
+    <SafeAreaView style={style.container}>
       <View style={style.header}>
         <Header/>
-        
-
-        <Text style={style.title}>
-          Bem vindo a suas vendas !!!
-        </Text>
+      </View>
 
 
-        <View style={style.conteinerRecibo}>
-        <Recibo/>
-        </View>
+      <View style={style.insert}>
+        <TextInput
+          style={style.input}
+          placeholder="Novo Produto"
+          placeholderTextColor="#555"
+          value={newSkill}
+          onChangeText={setNewSkill}
+        />
+      </View>
+ 
+      <View style={style.conteinerList}>
+      <Text style={[style.title, {marginVertical: 30}]}>Meus Produtos</Text>
+      </View> 
 
-
-        <View  style={style.button}>
+      <ScrollView>
+       <View style={style.conteinerList}>
        
-          <Button
-          title={'+Novo'}
-          onPress={()=>{setVisible(true)}}/>
+        <FlatList 
+          data={listSkills}
+          keyExtractor={item => item.id}
+          renderItem={({item}) =>(
+            
+            <SkillCard 
+            onPress={() => handleRemoveSkill(item.id)}
+            skill={item.name} /> 
+
+          )}
+
+          ListEmptyComponent={
+            <Text style={style.empty}>Nenhum produto adicionada 🤔 </Text>
+          } showsVerticalScrollIndicator={false} />
+
+          
+
+            
         </View>
 
-        
-        
-        
-
-      </View>
-    
-      
-
-      <View style={style.centeredView}> 
-        <Modal visible={isVisible} 
-        transparent={true}>
-          <View style={style.centeredView}> 
-            <View style={style.modalView}>
-              <View style={style.containerInput}>
-                <Text style={style.textInput}> Produtos </Text>
-                <TextInput
-                  style={style.input}
-                  placeholder="Digite os produtos"
-                  onChangeText={handleInputProduto}
-                />
-                <Text style={style.textInput}>Valor</Text>
-                <TextInput 
-                  style= {style.input}
-                  placeholder="Digite o valor total"
-                  onChangeText={handleInputValor}
-                  />
-    
-              </View>
-
-              <View  style={style.buttonModal}>
-                <Button
-                title={'Criar'}
-                onPress={handleStart}/>
-              </View>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    </View>
+        <View  style={style.buttonModal}>
+          <Button
+            title={'Criar'}
+            onPress={handleAddNewSkills}/>
+        </View>
+        </ScrollView>
+    </SafeAreaView>
   );
-};
+}
 
 const style = StyleSheet.create({
   container: {
-    flex:1,
-    backgroundColor:'#F1B656'
-  },
-  centeredView: {
     flex: 1,
-    justifyContent: "center"
+    backgroundColor: '#F1B656',
+    
   },
+  title: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  greeting: {
+    color: '#fff',
+  },
+  input: {
+    width:"100%",
+    height:50,
+    backgroundColor: '#1f1e25',
+    color: '#fff',
+    fontSize: 18,
+    marginTop: 30,
+    borderRadius: 10,
+  },
+  insert: {
+    marginHorizontal:30,
+    alignItems:'center',
+    justifyContent:'center',
+   
+  },
+  conteinerList:{
+    marginHorizontal:30,
+    
+  },
+
   conteinerRecibo:{
     padding:15,
     flex:1,
@@ -160,47 +206,25 @@ const style = StyleSheet.create({
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
+    elevation: 5,
   },
-  title:{
-    fontSize:17,
-    color:'#0C141F',
-    lineHeight:20,
-    marginTop:15,
 
+  
+  empty: {
+    textAlign: 'center',
+    color: 'gray',
+    fontSize: 18,
+    marginTop: 90,
   },
-  button:{
-    paddingVertical:300,
+   header:{
+    marginHorizontal:30,
     alignItems:'center'
   },
+
   buttonModal:{
-    paddingVertical:20,
+    justifyContent:'center',
     alignItems:'center',
-    width: '60%'
+    marginVertical:20,
+    
   },
-  header:{
-    paddingHorizontal:30,
-  },
-  input: {
-    backgroundColor:'white',
-    borderRadius:8,
-    color: 'gray',
-    width:'100%',
-    fontSize:18,
-    marginTop:5,
-    padding:10,
-    textAlign:'center'
-  },
-  containerInput: {
-      justifyContent:'center',
-      marginTop:50,
-      paddingHorizontal:40,
-      width:'100%'
-  },
-  textInput: {
-      marginVertical:5,
-      color:'#0C141F',
-      fontSize:18,
-      marginTop:5
-  }
-})
+});
