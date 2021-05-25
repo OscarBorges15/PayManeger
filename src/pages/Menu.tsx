@@ -1,183 +1,183 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  StyleSheet, 
-  Text, 
-  TextInput, 
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Platform,
+  SafeAreaView,
+  FlatList, 
   Modal, 
-  Alert 
+  Alert,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {Button} from '../components/Button';
+import {BtnAdicionar} from '../components/BtnAdicionar';
+import {SkillCard} from '../components/SkillCard';
 import {Header} from '../components/Header'
-import {Load} from '../components/Load'
 
-import {Conprovantes} from '../components/Conprovantes'
-import {saveRecibo, ReciboProps} from '../libs/storage'
-
-import {Recibo} from '../components/Recibo';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export function Menu(){
+interface SkillData {
+  id: string;
+  name: string;
+}
 
-  const[loading, setLoadinig] = useState(true);
-
-  const [produto, setProduto] = useState<string>();
-  const [valor, setValor] = useState<string>();
-
-  const [isVisible, setVisible] = useState(false);
-  
+export function Menu() {
   const navigation = useNavigation(); 
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoadinig(false);
-    }, 1200 );
-  }, []);
-
-  if(loading){
-    return(
-      <View>
-      <Load/>
-      </View>
-    )
-  }
-
-  function handleInputProduto(value: string){
-    setProduto(value);
-  }
-  function handleInputValor(value: string){
-    setValor(value);
-  }
+  const [name, setName] = useState<string>();
 
   async function handleStart(){
-    if(!produto)
-      return Alert.alert('Preencha todos os campos');
-    await AsyncStorage.setItem('@managerpay:produto', produto);
     
-    if(!valor)
-      return Alert.alert('Preencha todos os campos');
-    await AsyncStorage.setItem('@managerpay:valor', valor);
+    navigation.navigate('EnviarRecibo');
+
+  }
+
+  function handleInputChange(value : string){
+    setName(value);
     
-    navigation.navigate('Menu');
-    setVisible(!isVisible)
+  }
+
+  const [newSkill, setNewSkill] = useState('');
+  const [listSkills, setListSkills] = useState<SkillData[]>([]);
+  const [greetings, setGreetings] = useState('');
+
+  useEffect(() => {
+    const currentHour = new Date().getHours();
+
+    
+  
+   
+
+    if(currentHour < 12){
+      setGreetings('Bom dia');
+    }else if(currentHour >= 12 && currentHour <= 18){
+      setGreetings('Boa tarde')
+    }else{
+      setGreetings('Boa noite')
+    }
+
+  }, [])
+
+  function handleRemoveSkill(id: string) {
+    Alert.alert('Deletar Skill', 'Deseja deletar a skill selecionada?', [
+      {
+        text: 'Não',
+      },
+      {
+        text: 'Sim',
+        onPress: () => {
+          return setListSkills(oldState => oldState.filter(skill => skill.id !== id))
+        }
+      },
+    ])
+  }
+
+  function handleAddNewSkills() {
+
+    if(newSkill === ''){
+      Alert.alert('Atenção ⚠', 'Você não nomeou nenhum produto')
+      return;
+    }
+
+    const data = {
+      id: String(new Date().getTime()),
+      name: newSkill
+    }
+
+    setListSkills(oldState => [...oldState, data]);
+
+    setNewSkill('');
   }
 
   return (
-    <View style={style.container}>
+    <SafeAreaView style={style.container}>
+      <Text style={style.title}>
+        Bem vindo a suas venda !!!
+        </Text>
       <View style={style.header}>
         <Header/>
-        <Text style={style.title}>
-          Bem vindo a suas vendas !!!
-        </Text>
-
-
-      <View  style={style.button}>
-        <Button
-        title={'+Novo'}
-        onPress={()=>{setVisible(true)}}/>
+      <View style={style.insert}>
+        <TextInput
+          style={style.input}
+          placeholder="Novo Produto"
+          placeholderTextColor="#555"
+          value={newSkill}
+          onChangeText={setNewSkill}
+        />
+        <BtnAdicionar title="+" onPress={handleAddNewSkills} />
       </View>
-
+      <Text style={[style.title, {marginVertical: 30}]}>Meus Produtos</Text>
+      <FlatList 
+        data={listSkills}
+        keyExtractor={item => item.id}
+        renderItem={({item}) =>(
+          <SkillCard 
+          onPress={() => handleRemoveSkill(item.id)}
+          skill={item.name}
+          />
+        )}
+        ListEmptyComponent={
+          <Text style={style.empty}>Nenhum produto adicionada 🤔</Text>
+        }
+        showsVerticalScrollIndicator={false}
+      />
       </View>
-      <Recibo/>
-      
-
-      <View style={style.centeredView}> 
-        <Modal visible={isVisible} 
-        transparent={true}>
-          <View style={style.centeredView}> 
-            <View style={style.modalView}>
-              <View style={style.containerInput}>
-                <Text style={style.textInput}> Produtos </Text>
-                <TextInput
-                  style={style.input}
-                  placeholder="Digite os produtos"
-                  onChangeText={handleInputProduto}
-                />
-                <Text style={style.textInput}>Valor</Text>
-                <TextInput 
-                  style= {style.input}
-                  placeholder="Digite o valor total"
-                  onChangeText={handleInputValor}
-                  />
-    
-              </View>
-
-              <View  style={style.buttonModal}>
+      <View  style={style.buttonModal}>
                 <Button
                 title={'Criar'}
                 onPress={handleStart}/>
               </View>
-            </View>
-          </View>
-        </Modal>
-      </View>
-    </View>
+    </SafeAreaView>
   );
-};
+}
 
 const style = StyleSheet.create({
   container: {
-    flex:1,
-    backgroundColor:'#F1B656'
-  },
-  centeredView: {
     flex: 1,
-    justifyContent: "center"
+    backgroundColor: '#F1B656',
+    paddingHorizontal: 20,
+    paddingTop: 50,
   },
-  modalView: {
-    margin: 20,
-    backgroundColor: "#F2F2F2",
-    borderRadius: 20,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5
+  title: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
   },
-  title:{
-    fontSize:17,
-    color:'#0C141F',
-    lineHeight:20,
-    marginTop:15,
+  greeting: {
+    color: '#fff',
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#1f1e25',
+    color: '#fff',
+    fontSize: 18,
+    padding: Platform.OS === 'ios' ? 15 : 10,
+    marginTop: 30,
+    borderRadius: 10,
+  },
+  insert: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  empty: {
+    textAlign: 'center',
+    color: 'gray',
+    fontSize: 18,
+    marginTop: 90,
+  },
 
+   header:{
+    paddingHorizontal:30,
   },
-  button:{
-    paddingVertical:380,
-    alignItems:'center'
-  },
+
   buttonModal:{
-    paddingVertical:20,
+    paddingVertical:40,
     alignItems:'center',
     width: '60%'
   },
-  header:{
-    paddingHorizontal:30,
-  },
-  input: {
-    backgroundColor:'white',
-    borderRadius:8,
-    color: 'gray',
-    width:'100%',
-    fontSize:18,
-    marginTop:5,
-    padding:10,
-    textAlign:'center'
-  },
-  containerInput: {
-      justifyContent:'center',
-      marginTop:50,
-      paddingHorizontal:40,
-      width:'100%'
-  },
-  textInput: {
-      marginVertical:5,
-      color:'#0C141F',
-      fontSize:18,
-      marginTop:5
-  }
-})
+});
