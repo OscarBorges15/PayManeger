@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import {getStatusBarHeight} from 'react-native-iphone-x-helper'
 import perfilImg from '../assets/perfil.png'; 
 
+import {UploadImage} from '../components/uploadImage'
 
 
 export function Header(){
@@ -33,8 +34,9 @@ export function Header(){
         </Text>
       </View>
       
-      <Image source={perfilImg} style={styles.image}/>
-
+     <View> 
+      <UploadImage/>
+    </View>
 
 
     </View>
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
   },
   comprimento:{
     fontSize:32,
-    color:'#0C141F'
+    color:'#0C141F',
     
 
   },

@@ -19,29 +19,28 @@ export function Recibo(){
 
   return(
 
-    <View style={styles.container}>
-     
-      <View>
+      <View style={styles.container}>
         <Text style={styles.comprimento}>Recibo</Text>
         <Text style={styles.text}> 
-            Itens: {produto} {"\n"}
+            Itens: {produto}  
             Valor: {valor}
         </Text>
       </View>
 
-    </View>
+    
   )
 }
 
 const styles = StyleSheet.create({
   container:{
-    width:'90%',
+    
+    width:'120%',
     backgroundColor:'white',
-    borderRadius:50,
+    borderRadius:30,
     height:90,
-    marginVertical:5,
-    padding:15,
-    alignItems:'center'
+    alignItems:'center',
+    justifyContent:'center',
+    margin:20
     
   },
   comprimento:{

@@ -50,10 +50,11 @@ const style = StyleSheet.create({
     
     },
     containertittle:{
-        alignItems: 'flex-start',
-        justifyContent: 'space-around',
-        paddingHorizontal:18,
-        paddingVertical:30
+      
+       alignItems:'center'
+      
+        
+        
     
     },
     text: {

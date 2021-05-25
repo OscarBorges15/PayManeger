@@ -11,6 +11,8 @@ import {useNavigation} from '@react-navigation/core';
 import {Button} from '../components/Button';
 import {Header} from '../components/Header'
 import {Load} from '../components/Load'
+import {UploadImage} from '../components/uploadImage'
+
 
 import {Conprovantes} from '../components/Conprovantes'
 import {saveRecibo, ReciboProps} from '../libs/storage'
@@ -29,11 +31,13 @@ export function Menu(){
   
   const navigation = useNavigation(); 
 
+
   useEffect(() => {
     setTimeout(() => {
       setLoadinig(false);
     }, 1200 );
-  }, []);
+
+  }, [ produto ]);
 
   if(loading){
     return(
@@ -59,7 +63,7 @@ export function Menu(){
       return Alert.alert('Preencha todos os campos');
     await AsyncStorage.setItem('@managerpay:valor', valor);
     
-    navigation.navigate('Menu');
+    navigation.navigate('EnviarRecibo');
     setVisible(!isVisible)
   }
 
@@ -67,19 +71,31 @@ export function Menu(){
     <View style={style.container}>
       <View style={style.header}>
         <Header/>
+        
+
         <Text style={style.title}>
           Bem vindo a suas vendas !!!
         </Text>
 
 
-      <View  style={style.button}>
-        <Button
-        title={'+Novo'}
-        onPress={()=>{setVisible(true)}}/>
-      </View>
+        <View style={style.conteinerRecibo}>
+        <Recibo/>
+        </View>
+
+
+        <View  style={style.button}>
+       
+          <Button
+          title={'+Novo'}
+          onPress={()=>{setVisible(true)}}/>
+        </View>
+
+        
+        
+        
 
       </View>
-      <Recibo/>
+    
       
 
       <View style={style.centeredView}> 
@@ -125,6 +141,13 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: "center"
   },
+  conteinerRecibo:{
+    padding:15,
+    flex:1,
+    alignItems:'center',
+
+
+  },
   modalView: {
     margin: 20,
     backgroundColor: "#F2F2F2",
@@ -147,7 +170,7 @@ const style = StyleSheet.create({
 
   },
   button:{
-    paddingVertical:380,
+    paddingVertical:300,
     alignItems:'center'
   },
   buttonModal:{
