@@ -14,11 +14,14 @@ import {
   Keyboard,
   ScrollView,
 } from 'react-native';
+
 import {useNavigation} from '@react-navigation/core';
 import {Button} from '../components/Button';
 import {BtnAdicionar} from '../components/BtnAdicionar';
 import {SkillCard} from '../components/SkillCard';
 import {Header} from '../components/Header'
+
+import {Load} from '../components/Load';
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -30,21 +33,34 @@ interface SkillData {
 
 export function Menu() {
   const navigation = useNavigation(); 
-  const [name, setName] = useState<string>();
 
   async function handleStart(){
     navigation.navigate('EnviarRecibo');
   }
 
   
-
+  const[loading, setLoadinig] = useState(true);
   const [newSkill, setNewSkill] = useState('');
   const [newValor, setNewValor] = useState('');
   const [listSkills, setListSkills] = useState<SkillData[]>([]);
 
 
+  useEffect(() => {
+    setTimeout(() => {
+      setLoadinig(false);
+    }, 1200 );
   
-
+  }, [ ]);
+  
+  if(loading){
+    return(
+      <View>
+      <Load/>
+      </View>
+    )
+  }
+  
+  
   function handleAddNewSkills() {
 
     if(newSkill === '' && newValor === ''){
