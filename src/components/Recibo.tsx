@@ -8,8 +8,8 @@ export function Recibo(){
 
   useEffect(()=> {
     async function loadStorageRecibo(){
-      const produto = await AsyncStorage.getItem('@managerpay:produto');
-      const valor = await AsyncStorage.getItem('@managerpay:valor');
+      const produto = await AsyncStorage.getItem('@ManagerPay:produto');
+      const valor = await AsyncStorage.getItem('@ManagerPay:valor');
       setProduto(produto || '');
       setValor(valor || '');
     }

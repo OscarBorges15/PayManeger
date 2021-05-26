@@ -1,183 +1,264 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  StyleSheet, 
-  Text, 
-  TextInput, 
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Platform,
+  SafeAreaView,
+  FlatList, 
   Modal, 
-  Alert 
+  Alert,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/core';
 import {Button} from '../components/Button';
+import {BtnAdicionar} from '../components/BtnAdicionar';
+import {SkillCard} from '../components/SkillCard';
 import {Header} from '../components/Header'
-import {Load} from '../components/Load'
 
-import {Conprovantes} from '../components/Conprovantes'
-import {saveRecibo, ReciboProps} from '../libs/storage'
-
-import {Recibo} from '../components/Recibo';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export function Menu(){
+interface SkillData {
+  id: string;
+  name: string;
+  number: number;
+}
 
-  const[loading, setLoadinig] = useState(true);
-
-  const [produto, setProduto] = useState<string>();
-  const [valor, setValor] = useState<string>();
+export function Menu() {
+  const navigation = useNavigation(); 
+  const [name, setName] = useState<string>();
 
   const [isVisible, setVisible] = useState(false);
+
+  const [newSkill, setNewSkill] = useState('');
+  const [newValor, setNewValor] = useState('');
+  const [listSkills, setListSkills] = useState<SkillData[]>([]);
+  const [greetings, setGreetings] = useState('');
+
+  async function handleStart(){
+    navigation.navigate('EnviarRecibo');
+  }
+
+  function handleInputChange(value : string){
+    setName(value);
+    
+  }
   
-  const navigation = useNavigation(); 
-
   useEffect(() => {
-    setTimeout(() => {
-      setLoadinig(false);
-    }, 1200 );
-  }, []);
+    const currentHour = new Date().getHours();
 
-  if(loading){
-    return(
-      <View>
-      <Load/>
-      </View>
-    )
+    if(currentHour < 12){
+      setGreetings('Bom dia');
+    }else if(currentHour >= 12 && currentHour <= 18){
+      setGreetings('Boa tarde')
+    }else{
+      setGreetings('Boa noite')
+    }
+
+  }, [])
+
+  function handleEnviar(){
+    navigation.navigate('EnviarRecibo');
+    setVisible(!isVisible);
+  }
+
+  function handleRemoveSkill(id: string) {
+    setVisible(true)
+    Alert.alert('❌ <b>Deletar Produto</b> ❌', 'Deseja deletar o produto selecionado?', [
+      {
+        text: 'Não'
+      },
+      {
+        text: 'Sim',
+        onPress: () => {
+          return setListSkills(oldState => oldState.filter(skill => skill.id !== id))
+        }
+      },
+    ])
   }
 
   function handleInputProduto(value: string){
-    setProduto(value);
+    setNewSkill(value);
   }
   function handleInputValor(value: string){
-    setValor(value);
+    setNewValor(value);
   }
 
-  async function handleStart(){
-    if(!produto)
-      return Alert.alert('Preencha todos os campos');
-    await AsyncStorage.setItem('@managerpay:produto', produto);
+  function handleAddNewSkills() {
+
+    if(!newSkill)
+      return Alert.alert('Atenção ⚠', 'Você não nomeou o produto');
+    AsyncStorage.setItem('@ManagerPay:produto', newSkill);
     
-    if(!valor)
-      return Alert.alert('Preencha todos os campos');
-    await AsyncStorage.setItem('@managerpay:valor', valor);
+
+    if(!newValor)
+      return Alert.alert('Atenção ⚠', 'Você não informou o valor');
+    AsyncStorage.setItem('@ManagerPay:valor', newValor);
     
-    navigation.navigate('Menu');
-    setVisible(!isVisible)
+
+    const data = {
+      id: String(new Date().getTime()),
+      name: newSkill,
+      number: newValor,
+    }    
+
+    setListSkills(oldState => [...oldState, data]);
+
+    setNewSkill('');
+    setNewValor('');
   }
+
+  
 
   return (
-    <View style={style.container}>
+    <SafeAreaView style={style.container}>
+      <Text style={style.title}>
+        Bem vindo a suas venda !!!
+        </Text>
       <View style={style.header}>
         <Header/>
-        <Text style={style.title}>
-          Bem vindo a suas vendas !!!
-        </Text>
-
-
-      <View  style={style.button}>
+      <View style={style.insert}>
+        <TextInput
+          style={style.input}
+          placeholder="Nome Produto"
+          placeholderTextColor="#555"
+          onChangeText={setNewSkill}
+        />
+        <TextInput
+          style={style.input}
+          placeholder="Valor Produto"
+          placeholderTextColor="#555"
+          onChangeText={handleInputValor}
+        />
+        <BtnAdicionar title="+" onPress={handleAddNewSkills} />
+      </View>
+      <Text style={[style.title, {marginVertical: 30}]}>Meus Produtos</Text>
+      <FlatList 
+        data={listSkills}
+        keyExtractor={item => item.id}
+        renderItem={({item}) =>(
+          <SkillCard 
+          onPress={()=>{setVisible(true)}}
+          skill={item.name}
+          valor={item.number}
+          />
+        )}
+        ListEmptyComponent={
+          <Text style={style.empty}>Nenhum produto adicionado 🤔</Text>
+        }
+        showsVerticalScrollIndicator={false}
+      />
+      </View>
+      <View  style={style.buttonModal}>
         <Button
-        title={'+Novo'}
-        onPress={()=>{setVisible(true)}}/>
+          title={'Criar'}
+          onPress={handleStart}/>
       </View>
-
-      </View>
-      <Recibo/>
-      
 
       <View style={style.centeredView}> 
         <Modal visible={isVisible} 
         transparent={true}>
           <View style={style.centeredView}> 
             <View style={style.modalView}>
-              <View style={style.containerInput}>
-                <Text style={style.textInput}> Produtos </Text>
-                <TextInput
-                  style={style.input}
-                  placeholder="Digite os produtos"
-                  onChangeText={handleInputProduto}
-                />
-                <Text style={style.textInput}>Valor</Text>
-                <TextInput 
-                  style= {style.input}
-                  placeholder="Digite o valor total"
-                  onChangeText={handleInputValor}
-                  />
-    
+              <View style={style.containerInput}>      
+                <Text style={style.textInput}>Deseja deletar ou enviar o recibo selecionado?</Text>
               </View>
 
+            
               <View  style={style.buttonModal}>
                 <Button
-                title={'Criar'}
-                onPress={handleStart}/>
+                title={'Enviar'}
+                onPress={handleEnviar}/>
               </View>
             </View>
           </View>
         </Modal>
       </View>
-    </View>
+      
+    </SafeAreaView>
   );
-};
+}
 
 const style = StyleSheet.create({
   container: {
-    flex:1,
-    backgroundColor:'#F1B656'
+    flex: 1,
+    backgroundColor: '#F1B656',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+  },
+  title: {
+    color: '#fff',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  greeting: {
+    color: '#fff',
+  },
+  input: {
+    flex: 1,
+    backgroundColor: '#1f1e25',
+    color: '#fff',
+    fontSize: 18,
+    padding: Platform.OS === 'ios' ? 15 : 10,
+    marginTop: 30,
+    borderRadius: 10,
+    paddingHorizontal: 5,
+    marginLeft: 5,
+  },
+  insert: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  empty: {
+    textAlign: 'center',
+    color: 'gray',
+    fontSize: 18,
+    marginTop: 90,
+  },
+
+   header:{
+    paddingHorizontal:30,
+  },
+
+  buttonModal:{
+    paddingVertical:40,
+    alignItems:'center',
+    width: '60%'
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center"
+    justifyContent: "center",
+    marginTop: 55,
   },
   modalView: {
     margin: 20,
+    height: 330,
     backgroundColor: "#F2F2F2",
     borderRadius: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
-      height: 2
+      width: 5,
+      height: 5,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
-  },
-  title:{
-    fontSize:17,
-    color:'#0C141F',
-    lineHeight:20,
-    marginTop:15,
-
-  },
-  button:{
-    paddingVertical:380,
-    alignItems:'center'
-  },
-  buttonModal:{
-    paddingVertical:20,
-    alignItems:'center',
-    width: '60%'
-  },
-  header:{
-    paddingHorizontal:30,
-  },
-  input: {
-    backgroundColor:'white',
-    borderRadius:8,
-    color: 'gray',
-    width:'100%',
-    fontSize:18,
-    marginTop:5,
-    padding:10,
-    textAlign:'center'
+    elevation: 5,
   },
   containerInput: {
-      justifyContent:'center',
-      marginTop:50,
-      paddingHorizontal:40,
-      width:'100%'
-  },
-  textInput: {
-      marginVertical:5,
-      color:'#0C141F',
-      fontSize:18,
-      marginTop:5
-  }
-})
+    justifyContent:'center',
+    marginTop:50,
+    paddingHorizontal:40,
+    width:'100%'
+},
+textInput: {
+    marginVertical:5,
+    color:'#0C141F',
+    fontSize:18,
+    marginTop:5,
+},
+});

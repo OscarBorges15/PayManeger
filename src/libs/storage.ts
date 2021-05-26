@@ -34,3 +34,21 @@ export async function saveRecibo(recibo: ReciboProps) : Promise<void> {
         throw new Error(error);
     }
 }
+
+export async function loadRecibo() : Promise<ReciboProps[]> {
+    try {
+        const data = await AsyncStorage.getItem('@managerpay:recibo');
+        const recibos = data ? (JSON.parse(data) as StorageRecibo) : {};
+        
+        const reciboSorted = Object
+        .keys(recibos)
+        .map((recibo)=> {
+            return {
+                ...recibos[recibo].data
+            }
+        })
+        return reciboSorted;
+    }catch (error) {
+        throw new Error(error);
+    }
+}
