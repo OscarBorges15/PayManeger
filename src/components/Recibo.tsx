@@ -2,46 +2,50 @@ import  React, {useState, useEffect} from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export function Recibo(){
-  const [produto, setProduto] = useState<string>();
-  const [valor, setValor] = useState<string>();
+interface ReciboProps{
+  item:any
+}
 
-  useEffect(()=> {
-    async function loadStorageRecibo(){
-      const produto = await AsyncStorage.getItem('@ManagerPay:produto');
-      const valor = await AsyncStorage.getItem('@ManagerPay:valor');
-      setProduto(produto || '');
-      setValor(valor || '');
-    }
-    loadStorageRecibo();
+export const Recibo:React.FC<ReciboProps> = ({item})=>{
+
+  // const [produto, setProduto] = useState<string>();
+  // const [valor, setValor] = useState<string>();
+
+  // useEffect(()=> {
+  //   async function loadStorageRecibo(){
+  //     const produto = await AsyncStorage.getItem('@ManagerPay:produto');
+  //     const valor = await AsyncStorage.getItem('@ManagerPay:valor');
+  //     setProduto(produto || '');
+  //     setValor(valor || '');
+  //   }
+  //   loadStorageRecibo();
     
-  },[]);
+  // },[]);
 
   return(
 
-    <View style={styles.container}>
-     
-      <View>
+      <View style={styles.container}>
         <Text style={styles.comprimento}>Recibo</Text>
         <Text style={styles.text}> 
-            Itens: {produto} {"\n"}
-            Valor: {valor}
+            Itens: {item.name} {'\n'}
+            Valor: {item.number}
         </Text>
       </View>
 
-    </View>
+    
   )
 }
 
 const styles = StyleSheet.create({
   container:{
-    width:'90%',
+    
+    width:'120%',
     backgroundColor:'white',
-    borderRadius:50,
+    borderRadius:30,
     height:90,
-    marginVertical:5,
-    padding:15,
-    alignItems:'center'
+    alignItems:'center',
+    justifyContent:'center',
+    margin:20
     
   },
   comprimento:{

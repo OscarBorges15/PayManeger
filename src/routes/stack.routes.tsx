@@ -2,14 +2,16 @@ import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import {Welcome} from '../pages/Welcome'
+
+
 import {Login} from '../pages/Login'
 import {Menu} from '../pages/Menu'
 import {Cadastro} from '../pages/Cadastro'
 import {CadastroConfirmation} from '../pages/CadastroConfirmation'
 import {UserConfirmation2} from '../pages/UserConfirmation2'
 import {UserConfirmation} from '../pages/UserConfirmation'
-
 import {EnviarRecibo} from '../pages/EnviarRecibo'
+
 
 const stackRoutes = createStackNavigator();
 

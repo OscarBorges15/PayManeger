@@ -19,11 +19,8 @@ export function SkillCard ({skill, valor,...rest} : SkillCardProps) {
         >
             <Text style={styles.listText}>Produto: {skill} {'\n'} {'\n'}Valor: {valor}</Text>
             
-          
         </TouchableOpacity>
     )
-    
-    
 }
 
 const styles = StyleSheet.create({

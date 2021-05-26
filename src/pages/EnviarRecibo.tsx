@@ -1,22 +1,27 @@
 import React from 'react';
 import { Text, View, StyleSheet, SafeAreaView, Image, Dimensions } from 'react-native';
-import {useNavigation} from '@react-navigation/core';
+import {useNavigation, useRoute} from '@react-navigation/core';
 import {Button, Button2} from '../components/Button';
 import qrcodeImg from '../assets/qrcode.png';
 import {Recibo} from '../components/Recibo';
+
 export function EnviarRecibo(){
     const navigation = useNavigation(); 
+    const route = useRoute(); 
+    const {item} = route.params
+
     function handleStart(){
         navigation.navigate('Menu')
     }
     function handleStart2(){
         navigation.navigate('Menu')
     }
+
     return (
         <SafeAreaView style={style.container}>
             <View style={style.containertittle}>
             
-                <Recibo/>
+                <Recibo item={item}/>
     
             </View>
             <View style={style.conteinerImage} >
@@ -50,10 +55,11 @@ const style = StyleSheet.create({
     
     },
     containertittle:{
-        alignItems: 'flex-start',
-        justifyContent: 'space-around',
-        paddingHorizontal:18,
-        paddingVertical:30
+      
+       alignItems:'center'
+      
+        
+        
     
     },
     text: {

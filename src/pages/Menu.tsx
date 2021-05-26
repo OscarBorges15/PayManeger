@@ -12,12 +12,16 @@ import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
+
 import {useNavigation} from '@react-navigation/core';
 import {Button} from '../components/Button';
 import {BtnAdicionar} from '../components/BtnAdicionar';
 import {SkillCard} from '../components/SkillCard';
 import {Header} from '../components/Header'
+
+import {Load} from '../components/Load';
 
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -36,50 +40,36 @@ export function Menu() {
   const [newSkill, setNewSkill] = useState('');
   const [newValor, setNewValor] = useState('');
   const [listSkills, setListSkills] = useState<SkillData[]>([]);
-  const [greetings, setGreetings] = useState('');
+  const[loading, setLoadinig] = useState(true);
+  const [itemModal, setItemModal] = useState(null);
 
-  async function handleStart(){
-    navigation.navigate('EnviarRecibo');
-  }
+  function handleEnviar(item: any){
+    navigation.navigate('EnviarRecibo',{item});
 
-  function handleInputChange(value : string){
-    setName(value);
-    
-  }
-  
-  useEffect(() => {
-    const currentHour = new Date().getHours();
-
-    if(currentHour < 12){
-      setGreetings('Bom dia');
-    }else if(currentHour >= 12 && currentHour <= 18){
-      setGreetings('Boa tarde')
-    }else{
-      setGreetings('Boa noite')
-    }
-
-  }, [])
-
-  function handleEnviar(){
-    navigation.navigate('EnviarRecibo');
     setVisible(!isVisible);
   }
 
   function handleRemoveSkill(id: string) {
-    setVisible(true)
-    Alert.alert('❌ <b>Deletar Produto</b> ❌', 'Deseja deletar o produto selecionado?', [
-      {
-        text: 'Não'
-      },
-      {
-        text: 'Sim',
-        onPress: () => {
-          return setListSkills(oldState => oldState.filter(skill => skill.id !== id))
-        }
-      },
-    ])
+    setVisible(!isVisible);
+    setListSkills(oldState => oldState.filter(skill => skill.id !== id))
   }
-
+  
+    
+    useEffect(() => {
+      setTimeout(() => {
+        setLoadinig(false);
+      }, 1200 );
+    
+    }, [ ]);
+    
+    if(loading){
+      return(
+        <View>
+        <Load/>
+        </View>
+      )
+    }
+  
   function handleInputProduto(value: string){
     setNewSkill(value);
   }
@@ -88,6 +78,10 @@ export function Menu() {
   }
 
   function handleAddNewSkills() {
+    if(newSkill === '' && newValor === ''){
+      Alert.alert('Atenção ⚠', 'Você não nomeou um produto nem informou o seu valor')
+      return;
+    }
 
     if(!newSkill)
       return Alert.alert('Atenção ⚠', 'Você não nomeou o produto');
@@ -103,29 +97,32 @@ export function Menu() {
       id: String(new Date().getTime()),
       name: newSkill,
       number: newValor,
-    }    
+    }  
 
     setListSkills(oldState => [...oldState, data]);
 
     setNewSkill('');
     setNewValor('');
   }
-
+  const openModal = (item: any) =>{
+    setItemModal(item)
+    setVisible(true)
+  }
   
 
   return (
     <SafeAreaView style={style.container}>
-      <Text style={style.title}>
-        Bem vindo a suas venda !!!
-        </Text>
+      
       <View style={style.header}>
         <Header/>
+      </View>
+
       <View style={style.insert}>
         <TextInput
           style={style.input}
           placeholder="Nome Produto"
           placeholderTextColor="#555"
-          onChangeText={setNewSkill}
+          onChangeText={handleInputProduto}
         />
         <TextInput
           style={style.input}
@@ -135,29 +132,28 @@ export function Menu() {
         />
         <BtnAdicionar title="+" onPress={handleAddNewSkills} />
       </View>
-      <Text style={[style.title, {marginVertical: 30}]}>Meus Produtos</Text>
-      <FlatList 
-        data={listSkills}
-        keyExtractor={item => item.id}
-        renderItem={({item}) =>(
-          <SkillCard 
-          onPress={()=>{setVisible(true)}}
-          skill={item.name}
-          valor={item.number}
-          />
-        )}
-        ListEmptyComponent={
-          <Text style={style.empty}>Nenhum produto adicionado 🤔</Text>
-        }
-        showsVerticalScrollIndicator={false}
-      />
-      </View>
-      <View  style={style.buttonModal}>
-        <Button
-          title={'Criar'}
-          onPress={handleStart}/>
+      
+      <View style={style.titulo}>
+        <Text style={[style.tituloTexto, {marginVertical: 30}]}>Meus Produtos</Text>
       </View>
 
+      <ScrollView style={style.conteinerList} showsVerticalScrollIndicator = {false}>
+      
+        <View>
+          <FlatList 
+            data={listSkills}
+            keyExtractor={item => item.id}
+            renderItem={({item}) =>(
+              <SkillCard 
+              onPress={()=>openModal(item)}
+              skill={item.name}
+              valor={item.number}
+              />
+            )}
+          />
+        </View>
+        
+      </ScrollView>
       <View style={style.centeredView}> 
         <Modal visible={isVisible} 
         transparent={true}>
@@ -171,7 +167,11 @@ export function Menu() {
               <View  style={style.buttonModal}>
                 <Button
                 title={'Enviar'}
-                onPress={handleEnviar}/>
+                onPress={()=>handleEnviar(itemModal)}/>
+                <Button
+                title={'Deletar'}
+                onPress={()=>{handleRemoveSkill(itemModal.id)}}
+                />
               </View>
             </View>
           </View>
@@ -181,7 +181,6 @@ export function Menu() {
     </SafeAreaView>
   );
 }
-
 const style = StyleSheet.create({
   container: {
     flex: 1,
@@ -189,7 +188,12 @@ const style = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 50,
   },
-  title: {
+
+  titulo: {
+   paddingHorizontal: 37,
+  },
+
+  tituloTexto: {
     color: '#fff',
     fontSize: 24,
     fontWeight: 'bold',
@@ -208,10 +212,17 @@ const style = StyleSheet.create({
     paddingHorizontal: 5,
     marginLeft: 5,
   },
+
+  conteinerList:{
+    marginHorizontal:30,
+    
+  },
+
   insert: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 6,
   },
   empty: {
     textAlign: 'center',
@@ -225,9 +236,24 @@ const style = StyleSheet.create({
   },
 
   buttonModal:{
-    paddingVertical:40,
-    alignItems:'center',
-    width: '60%'
+    justifyContent: 'center',
+    alignItems:'stretch',
+    marginVertical: 2,
+    flexDirection: "row",
+    paddingHorizontal:70,
+    marginHorizontal: 2
+  },
+  containerInput: {
+    justifyContent:'center',
+    marginTop:50,
+    paddingHorizontal:40,
+    width:'100%'
+  },
+  textInput: {
+      marginVertical:35,
+      color:'#0C141F',
+      fontSize:18,
+      marginTop:5,
   },
   centeredView: {
     flex: 1,
@@ -236,7 +262,7 @@ const style = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    height: 330,
+    height: 230,
     backgroundColor: "#F2F2F2",
     borderRadius: 20,
     alignItems: "center",
@@ -248,17 +274,5 @@ const style = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-  },
-  containerInput: {
-    justifyContent:'center',
-    marginTop:50,
-    paddingHorizontal:40,
-    width:'100%'
-},
-textInput: {
-    marginVertical:5,
-    color:'#0C141F',
-    fontSize:18,
-    marginTop:5,
-},
+  }
 });
