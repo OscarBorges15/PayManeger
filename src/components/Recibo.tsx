@@ -31,8 +31,6 @@ export const Recibo:React.FC<ReciboProps> = ({item})=>{
             Valor: {item.number}
         </Text>
       </View>
-
-    
   )
 }
 

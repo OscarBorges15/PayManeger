@@ -40,35 +40,34 @@ export function Menu() {
   const [newSkill, setNewSkill] = useState('');
   const [newValor, setNewValor] = useState('');
   const [listSkills, setListSkills] = useState<SkillData[]>([]);
-  const[loading, setLoadinig] = useState(true);
+  const [loading, setLoadinig] = useState(true);
   const [itemModal, setItemModal] = useState(null);
 
   function handleEnviar(item: any){
-    navigation.navigate('EnviarRecibo',{item});
-
+    navigation.navigate('EnviarRecibo', {item});
     setVisible(!isVisible);
   }
 
   function handleRemoveSkill(id: string) {
     setVisible(!isVisible);
     setListSkills(oldState => oldState.filter(skill => skill.id !== id))
+    Alert.alert('Item excluído com sucesso')
   }
   
     
-    useEffect(() => {
-      setTimeout(() => {
-        setLoadinig(false);
-      }, 1200 );
+  useEffect(() => {
+    setTimeout(() => {
+       setLoadinig(false);
+    }, 1200 );
+  }, [ ]);
     
-    }, [ ]);
-    
-    if(loading){
-      return(
-        <View>
-        <Load/>
-        </View>
-      )
-    }
+  if(loading){
+    return(
+    <View>
+      <Load/>
+    </View>
+    )
+  }
   
   function handleInputProduto(value: string){
     setNewSkill(value);
@@ -77,7 +76,7 @@ export function Menu() {
     setNewValor(value);
   }
 
-  function handleAddNewSkills() {
+  async function handleAddNewSkills() {
     if(newSkill === '' && newValor === ''){
       Alert.alert('Atenção ⚠', 'Você não nomeou um produto nem informou o seu valor')
       return;
@@ -85,14 +84,12 @@ export function Menu() {
 
     if(!newSkill)
       return Alert.alert('Atenção ⚠', 'Você não nomeou o produto');
-    AsyncStorage.setItem('@ManagerPay:produto', newSkill);
+    await AsyncStorage.setItem('@ManagerPay:produto', newSkill);
     
-
     if(!newValor)
       return Alert.alert('Atenção ⚠', 'Você não informou o valor');
-    AsyncStorage.setItem('@ManagerPay:valor', newValor);
+    await AsyncStorage.setItem('@ManagerPay:valor', newValor);
     
-
     const data = {
       id: String(new Date().getTime()),
       name: newSkill,
@@ -100,15 +97,24 @@ export function Menu() {
     }  
 
     setListSkills(oldState => [...oldState, data]);
-
     setNewSkill('');
     setNewValor('');
   }
+
   const openModal = (item: any) =>{
+    // useEffect(()=> {
+    //      async function loadStorageRecibo(){
+    //       const newSkill = await AsyncStorage.getItem('@ManagerPay:produto');
+    //       const newValor = await AsyncStorage.getItem('@ManagerPay:valor');
+    //        setNewSkill(newSkill || '');
+    //        setNewValor(newValor || '');
+    //      }
+    //  loadStorageRecibo();
+    // },[]);
+    
     setItemModal(item)
     setVisible(true)
   }
-  
 
   return (
     <SafeAreaView style={style.container}>
@@ -138,7 +144,6 @@ export function Menu() {
       </View>
 
       <ScrollView style={style.conteinerList} showsVerticalScrollIndicator = {false}>
-      
         <View>
           <FlatList 
             data={listSkills}
@@ -152,17 +157,16 @@ export function Menu() {
             )}
           />
         </View>
-        
       </ScrollView>
+
       <View style={style.centeredView}> 
         <Modal visible={isVisible} 
-        transparent={true}>
+          transparent={true}>
           <View style={style.centeredView}> 
             <View style={style.modalView}>
               <View style={style.containerInput}>      
                 <Text style={style.textInput}>Deseja deletar ou enviar o recibo selecionado?</Text>
               </View>
-
             
               <View  style={style.buttonModal}>
                 <Button
@@ -177,10 +181,10 @@ export function Menu() {
           </View>
         </Modal>
       </View>
-      
     </SafeAreaView>
   );
 }
+
 const style = StyleSheet.create({
   container: {
     flex: 1,

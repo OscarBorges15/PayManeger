@@ -4,6 +4,7 @@ import {useNavigation, useRoute} from '@react-navigation/core';
 import {Button, Button2} from '../components/Button';
 import qrcodeImg from '../assets/qrcode.png';
 import {Recibo} from '../components/Recibo';
+import {UploadImage} from '../components/QrcodeUp'
 
 export function EnviarRecibo(){
     const navigation = useNavigation(); 
@@ -25,10 +26,7 @@ export function EnviarRecibo(){
     
             </View>
             <View style={style.conteinerImage} >
-                <Image 
-                    source={qrcodeImg} 
-                    style={style.image}
-                    resizeMode="contain"/>
+               <UploadImage />
             </View>
             <View style={style.button}>
                 <Button2
@@ -58,9 +56,6 @@ const style = StyleSheet.create({
       
        alignItems:'center'
       
-        
-        
-    
     },
     text: {
         fontSize: 24,
