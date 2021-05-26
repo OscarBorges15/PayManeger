@@ -34,7 +34,9 @@ export function Header(){
         </Text>
       </View>
       
+      
       <UploadImage/>
+      
 
     </View>
   )
@@ -44,7 +46,6 @@ const styles = StyleSheet.create({
   container:{
     width:'100%',
     flexDirection:'row',
-    justifyContent:'space-between',
     alignItems:'center',
     marginTop:getStatusBarHeight(),
   
@@ -66,5 +67,6 @@ const styles = StyleSheet.create({
     color:'#0C141F',
     lineHeight:40
 
-  }
+  },
+  
 })

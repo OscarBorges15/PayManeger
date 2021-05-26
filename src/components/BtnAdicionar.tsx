@@ -20,7 +20,7 @@ export function BtnAdicionar({title, ...rest} : ButtonProps) {
 const styles = StyleSheet.create({
   button: {
     borderWidth: 3,
-    borderColor: '#A370F7',
+    borderColor: '#1f1e25',
     height: 40,
     width: 40,
     borderRadius: 20,
@@ -32,6 +32,6 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#A370F7',
+    color: '#1f1e25',
   },
 });

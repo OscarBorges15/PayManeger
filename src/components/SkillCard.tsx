@@ -8,17 +8,22 @@ import {
 
 interface SkillCardProps extends TouchableOpacityProps {
     skill: string;
+    valor: number;
 }
 
-export function SkillCard ({skill, ...rest} : SkillCardProps) {
+export function SkillCard ({skill, valor,...rest} : SkillCardProps) {
     return(
         <TouchableOpacity
         style={styles.listContainer}
         {...rest}
         >
-            <Text style={styles.listText}>{skill}</Text>
+            <Text style={styles.listText}>Produto: {skill} {'\n'} {'\n'}Valor: {valor}</Text>
+            
+          
         </TouchableOpacity>
     )
+    
+    
 }
 
 const styles = StyleSheet.create({
