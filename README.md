@@ -22,17 +22,20 @@ O carro-chefe do projeto será a possibilidade do usuário análisar todas suas 
   - Tela para Adicionar Nome do usuário
   <img src="https://i.ibb.co/TM7twhs/Nome.jpg" width="375" height="640" />
   
+   - Alert de nome não preenchido
+  <img src="https://i.ibb.co/YhwjRYn/Digite-dados.jpg" width="375" height="640" />
+  
   - Tela para Adicionar o CPF do usuário
   <img src="https://i.ibb.co/tsdnMPf/CPF.jpg" width="375" height="640" />
   
   - Tela de Menu Principal
-  <img src="https://i.ibb.co/5LJWzqc/Menu.jpg" width="375" height="640" />
+  <img src="https://i.ibb.co/B6DkqX0/Menu.jpg" width="375" height="640" />
   
-  - Tela de Menu com Produtos adicionados
-  <img src="https://i.ibb.co/tQBL03D/Menu-com-lista.jpg" width="375" height="640" />
-  
+   - Tela de Enviar ou Deletar
+  <img src="https://i.ibb.co/GFnf2ZW/Modal.jpg" width="375" height="640" />
+
   - Tela de Enviar Recibo
-  <img src="https://i.ibb.co/1MF6Gdt/Enviar-Recibo.jpg" width="375" height="640" />
+  <img src="https://i.ibb.co/qDjVbtM/Enviar-Recibo.jpg" width="375" height="640" />
   
   ## Integrantes:
   - Bernardo Gomes Brandão - bernardo19070012@aluno.cesupa.br
